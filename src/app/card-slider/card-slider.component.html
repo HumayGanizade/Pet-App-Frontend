@@ -1,0 +1,64 @@
+<!--&lt;!&ndash;<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">&ndash;&gt;-->
+<!--<div class="card-container swiper">-->
+<!--  <div class="card-wrapper">-->
+<!--    <ul class="card-list swiper-wrapper">-->
+<!--      <li class="card-item swiper-slide">-->
+<!--        <a href="" class="card-link">-->
+<!--          <img src="assets/card-1.jpg" alt="" class="card-image">-->
+<!--          <h2 class="card-title">Lorem Ipsum is simply dummy text of the printing</h2>-->
+<!--          <button class="card-button material-symbols-outlined">arrow_forward</button>-->
+<!--        </a>-->
+<!--      </li>-->
+<!--      <li class="card-item swiper-slide">-->
+<!--        <a href="" class="card-link">-->
+<!--          <img src="assets/card-4.jpg" alt="" class="card-image">-->
+<!--          <h2 class="card-title">Lorem Ipsum is simply dummy text of the printing</h2>-->
+<!--          <button class="card-button material-symbols-outlined">arrow_forward</button>-->
+<!--        </a>-->
+<!--      </li>-->
+<!--      <li class="card-item swiper-slide">-->
+<!--        <a href="" class="card-link">-->
+<!--          <img src="assets/card-3.jpeg" alt="" class="card-image">-->
+<!--          <h2 class="card-title">Lorem Ipsum is simply dummy text of the printing</h2>-->
+<!--          <button class="card-button material-symbols-outlined">arrow_forward</button>-->
+<!--        </a>-->
+<!--      </li>-->
+<!--      <li class="card-item swiper-slide">-->
+<!--        <a href="" class="card-link">-->
+<!--          <img src="assets/card-2.jpg" alt="" class="card-image">-->
+<!--          <h2 class="card-title">Lorem Ipsum is simply dummy text of the printing</h2>-->
+<!--          <button class="card-button material-symbols-outlined">arrow_forward</button>-->
+<!--        </a>-->
+<!--      </li>-->
+<!--      <li class="card-item swiper-slide">-->
+<!--        <a href="" class="card-link">-->
+<!--          <img src="assets/card-5.jpg" alt="" class="card-image">-->
+<!--          <h2 class="card-title">Lorem Ipsum is simply dummy text of the printing</h2>-->
+<!--          <button class="card-button material-symbols-outlined">arrow_forward</button>-->
+<!--        </a>-->
+<!--      </li>-->
+<!--    </ul>-->
+
+<!--    <div class="swiper-pagination"></div>-->
+<!--    <div class="swiper-button-prev"></div>-->
+<!--    <div class="swiper-button-next"></div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash;<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>&ndash;&gt;-->
+<!--&lt;!&ndash;<script src ="script.js" ></script>&ndash;&gt;-->
+<section class="carousel-section">
+
+</section>
+<div class="swiper-container">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide" *ngFor="let image of images">
+      <img [src]="image" alt="Slide image" />
+    </div>
+  </div>
+  <!-- Add navigation buttons -->
+  <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div>
+  <!-- Add pagination -->
+  <div class="swiper-pagination"></div>
+</div>

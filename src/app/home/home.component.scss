@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+}
+
+.top {
+  font-family: "Lato", serif;
+  margin: 40px;
+  border-radius: 20px;
+  display: flex;
+  background-color: #dbcfe7;
+  align-items: center;
+  height: 600px;
+  justify-content: space-between;
+  overflow: hidden;
+  background-image: url("/assets/home-pets-1.jpg");
+
+  .purpose {
+    height: 50%;
+    padding: 50px;
+    width: 700px;
+    display: flex;
+    flex-direction: column;
+
+    h1 {
+      margin-bottom: 40px;
+      color: #a981a9;
+      background-color: white;
+      width: 200px;
+    }
+    .about {
+      background-color: #5f3475;
+      border-radius: 30px;
+      padding: 20px;
+
+      p {
+        color: white;
+      }
+    }
+  }
+}
