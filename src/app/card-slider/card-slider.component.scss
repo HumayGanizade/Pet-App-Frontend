@@ -1,76 +1,84 @@
-//.card-container {
-//  display: flex;
-//  align-items: center;
-//  justify-content: center;
-//  min-height: 100vh;
-//  background: linear-gradient(white, #690169);
-//}
-//
-//.card-list  {
-//  .card-item {
-//    list-style: none;
-//
-//    .card-link:hover {
-//      border-color: #c58bc5;
-//      .card-button {
-//        color: white;
-//        background: #933093;
-//      }
-//    }
-//
-//    .card-link {
-//      width: 400px;
-//      display: block;
-//      background: white;
-//      padding: 18px;
-//      border-radius: 12px;
-//      text-decoration: none;
-//      border: 2px solid transparent;
-//      box-shadow: 0 10px 10px #adadad;
-//      transition: 0.2s ease;
-//      user-select: none;
-//
-//      .card-image {
-//        width: 100%;
-//        aspect-ratio: 16/9;
-//        object-fit: cover;
-//        border-radius: 10px;
-//      }
-//      .card-title {
-//        font-size: 1.19rem;
-//        color: black;
-//        font-weight: 600;
-//      }
-//      .card-button {
-//        height: 35px;
-//        width: 35px;
-//        border-radius: 50%;
-//        margin: 30px 0 5px;
-//        background: none;
-//        cursor: pointer;
-//        border: 2px solid purple;
-//        transform: rotate(-45deg);
-//        transition: 0.2s ease;
-//      }
-//    }
-//  }
-//}
-.swiper-container {
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Lexend:wght@600&display=swap');
+.body {
   width: 100%;
-  height: 400px;
+}
+.card-container {
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.swiper-slide img {
-  width: 100%;
-  height: auto;
+.card-list  {
+  display: flex;
+  gap: 70px;
+
+  .card-item {
+    list-style: none;
+
+    .card-link:hover {
+      border-color: #c58bc5;
+      .card-button {
+        color: white;
+        background: #933093;
+      }
+    }
+
+    .card-link {
+      width: 350px;
+      display: block;
+      background: white;
+      padding: 18px;
+      border-radius: 12px;
+      text-decoration: none;
+      border: 2px solid transparent;
+      box-shadow: 0 10px 10px #adadad;
+      transition: 0.2s ease;
+      user-select: none;
+
+      .card-image {
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+      .card-title {
+        font-size: 1.19rem;
+        color: #601160;
+        font-family: "Lexend", serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+      }
+      .card-date {
+        padding-top: 5px;
+        color: #5d5d5d;
+        font-family: "Lexend", serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+      }
+      .card-price {
+        color: black;
+        padding-top: 5px;
+        font-family: "Lexend", serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+      }
+      .card-button {
+        height: 35px;
+        width: 35px;
+        border-radius: 50%;
+        margin: 30px 0 5px;
+        background: none;
+        cursor: pointer;
+        border: 2px solid purple;
+        transform: rotate(-45deg);
+        transition: 0.2s ease;
+      }
+    }
+  }
 }
 
-.swiper-button-next,
-.swiper-button-prev {
-  color: #000;
-}
-
-.swiper-pagination-bullet {
-  background: #000;
-}
 

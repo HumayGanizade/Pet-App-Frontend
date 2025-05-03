@@ -1,18 +1,15 @@
 import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {HomeComponent} from "./home/home.component";
 import {HeaderComponent} from "./header/header.component";
-import {CardSliderComponent} from "./card-slider/card-slider.component";
 import Swiper from "swiper"
 import {Navigation, Pagination} from "swiper/modules";
-import {NgForOf} from "@angular/common";
+import {ReactiveFormsModule} from "@angular/forms";
 
 Swiper.use([Navigation, Pagination]);
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HomeComponent, HeaderComponent, CardSliderComponent, NgForOf],
+  imports: [HeaderComponent, ReactiveFormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

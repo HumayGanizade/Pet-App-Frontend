@@ -1,0 +1,91 @@
+<div class="signup-container">
+  <div class="registration-box">
+    <h2>Create Account</h2>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <!-- Name Field -->
+      <div class="input-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" formControlName="name" placeholder="Enter your name" required>
+        <div *ngIf="signupForm.get('name')?.invalid && signupForm.get('name')?.touched" class="error-message">
+          Name is required.
+        </div>
+      </div>
+
+      <!-- Surname Field -->
+      <div class="input-group">
+        <label for="surname">Surname</label>
+        <input type="text" id="surname" formControlName="surname" placeholder="Enter your surname" required>
+        <div *ngIf="signupForm.get('surname')?.invalid && signupForm.get('surname')?.touched" class="error-message">
+          Surname is required.
+        </div>
+      </div>
+
+      <!-- Date of Birth Field -->
+      <div class="input-group">
+        <label for="date-of-birth">Date of Birth</label>
+        <input type="date" id="date-of-birth" formControlName="date_of_birth" required>
+        <div *ngIf="signupForm.get('date_of_birth')?.invalid && signupForm.get('date_of_birth')?.touched" class="error-message">
+          Date of birth is required.
+        </div>
+      </div>
+
+      <!-- Gender Picker -->
+      <div class="input-group">
+        <label for="gender">Gender</label>
+        <select id="gender" formControlName="gender" required>
+          <option value="" disabled selected>Select your gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+        <div *ngIf="signupForm.get('gender')?.invalid && signupForm.get('gender')?.touched" class="error-message">
+          Gender is required.
+        </div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="gmail" placeholder="Enter your email" required>
+        <div *ngIf="signupForm.get('gmail')?.invalid && signupForm.get('gmail')?.touched" class="error-message">
+          Enter a valid email.
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password" placeholder="Enter your password" required>
+        <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="error-message">
+          Password is required and should be at least 6 characters.
+        </div>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="input-group">
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" formControlName="confirmPassword" placeholder="Confirm your password" required>
+        <div *ngIf="signupForm.get('confirmPassword')?.invalid && signupForm.get('confirmPassword')?.touched" class="error-message">
+          Confirm password is required.
+        </div>
+        <div *ngIf="!passwordsMatch() && signupForm.get('confirmPassword')?.touched" class="error-message">
+          Passwords do not match.
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="submit-btn" >Register</button>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </form>
+
+    <!-- Login Link -->
+    <p class="login-link">
+      Already have an account? <a href="/login">Login here</a>
+    </p>
+  </div>
+</div>

@@ -9,7 +9,6 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  //background-color: #735996;
   background-color: #5f3475;
   height: 30px;
 }
@@ -32,9 +31,36 @@ header {
     transition: transform 0.3s ease;
   }
 }
+
+.nav-left li a, .nav-right li a {
+  color: inherit;  /* Inherit color from the parent li */
+  text-decoration: none; /* Remove underline */
+}
+
 .profile-photo {
   width: 30px;
   height: 30px;
   border-radius: 50%;
   object-fit: cover;
 }
+.menu-button {
+  background: transparent; /* No background */
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.menu-button .material-symbols-outlined {
+  padding-top: 2px;
+  color: white;
+  font-size: 25px;
+}
+
+mat-menu button.mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+

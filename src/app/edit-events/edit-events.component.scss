@@ -1,0 +1,46 @@
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  .active {
+    background-color: #3f51b5;
+    color: white;
+  }
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 10px 40px;
+}
+
+.event-card {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background: white;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.event-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.event-info {
+  flex: 1;
+  margin-left: 15px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

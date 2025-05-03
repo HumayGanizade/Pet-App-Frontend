@@ -1,0 +1,124 @@
+.choose-event {
+  display: flex;
+  margin: 30px;
+}
+
+.example-button-row {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+button {
+  white-space: nowrap;
+  padding: 10px 20px;
+  text-align: center;
+  width: 60%;
+}
+
+.form-container {
+  margin: 0 30px;
+}
+.upper-part {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .image-upload-container {
+    margin: 20px;
+    width: 450px;
+    height: 300px;
+    flex-shrink: 0; // Prevents shrinking
+    border: 2px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f9f9f9;
+
+    .placeholder {
+      text-align: center;
+      color: #888;
+    }
+
+    .uploaded-image {
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .input-section {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(200px, 1fr)); // Three items per row
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+    flex-wrap: wrap;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+
+   //Responsive behavior
+  @media (max-width: 1024px) {
+    .input-section {
+      grid-template-columns: repeat(2, minmax(200px, 1fr)); // Two columns on medium screens
+    }
+  }
+
+  @media (max-width: 768px) {
+    .image-upload-container {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+}
+.contact-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr)); // 3 inputs per row on large screens
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+
+  mat-form-field {
+    width: 100%; // Ensures proper alignment
+  }
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, minmax(200px, 1fr));
+  }
+}
+
+.info-plan {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  margin-bottom: 20px;
+
+  button {
+    width: 400px;
+  }
+}
+
+

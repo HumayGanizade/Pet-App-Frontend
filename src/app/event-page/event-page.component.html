@@ -1,0 +1,79 @@
+<div class="form-container" *ngIf="event && !loading; else loadingState">
+  <h3>{{ event.name }}</h3>
+
+  <div class="upper-container">
+    <div class="image-container">
+      <img *ngIf="event.photo; else placeholder" [src]="event.photo" class="uploaded-image" alt="Event Image"/>
+      <ng-template #placeholder>
+        <div class="placeholder">
+          <p>No Image</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="main-info-container">
+      <div class="main-info">
+        <div>{{ event.type }}</div>
+      </div>
+      <div class="main-info">
+        <div>{{ event.startDate }}, {{ event.endDate }}</div>
+      </div>
+      <div class="main-info">
+        <div>{{ event.country.name }}, {{ event.city.name }}</div>
+      </div>
+      <div class="main-info">
+        <div>{{ event.price }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lower-info-container">
+    <div class="lower-info">
+      <p>Animal:</p>
+      <ng-container *ngIf="event.pets?.length > 1; else singleAnimal">
+        <select>
+          <option *ngFor="let pet of event.pets" [value]="pet">{{ pet.name }}</option>
+        </select>
+      </ng-container>
+      <ng-template #singleAnimal>
+        <div>{{ event.pets }}</div>
+      </ng-template>
+    </div>
+    <div class="lower-info">
+      <p>Breeds:</p>
+      <ng-container *ngIf="event.breeds?.length > 1; else singleBreed">
+        <select>
+          <option *ngFor="let breed of event.breeds" [value]="breed">{{ breed.name }}</option>
+        </select>
+      </ng-container>
+      <ng-template #singleBreed>
+        <div>{{ event.breeds }}</div>
+      </ng-template>
+    </div>
+    <div class="lower-info">
+      <div><p>Info:</p></div>
+      <div>{{ event.info }}</div>
+    </div>
+    <div class="lower-info">
+      <div><p>Plan:</p></div>
+      <div>{{ event.plan }}</div>
+    </div>
+    <div class="lower-info">
+      <div><p>Address:</p></div>
+      <div>{{ event.location }}</div>
+    </div>
+    <div class="lower-info">
+      <div><p>Contact Number:</p></div>
+      <div>{{ event.contact_number }}</div>
+    </div>
+    <div class="lower-info">
+      <div><p>Contact Email:</p></div>
+      <div>{{ event.gmail }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading state -->
+<ng-template #loadingState>
+  <div class="loading">Loading...</div>
+</ng-template>

@@ -1,21 +1,43 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=menu" />
 <header>
   <ul class="nav-left">
     <li class="profile-photo">
       <a href="">
-        <img src="https://cdn-icons-png.flaticon.com/512/3093/3093444.png" alt="" class="profile-photo">
+        <img src="https://cdn-icons-png.flaticon.com/512/3093/3093444.png" alt="User Profile" class="profile-photo">
       </a>
     </li>
-    <li>Events</li>
+    <li routerLink="/app-find-events">Events</li>
     <li>Rescue</li>
     <li>Lost Animals</li>
   </ul>
+
   <ul class="nav-right">
-    <li>login</li>
-    <li>sign in</li>
-    <li class="profile-photo">
-      <a href="">
-        <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png" alt="" class="profile-photo">
-      </a>
-    </li>
+    <ng-container *ngIf="!isLoggedIn; else loggedInMenu">
+      <li><a routerLink="/login">Login</a></li>
+      <li><a routerLink="/sign-up">Sign Up</a></li>
+    </ng-container>
+
+    <ng-template #loggedInMenu>
+      <li class="logout-btn" (click)="logout()">Log out</li>
+      <button mat-icon-button [matMenuTriggerFor]="beforeMenu" class="menu-button">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <mat-menu #beforeMenu="matMenu" xPosition="before">
+        <a mat-menu-item routerLink="/account">
+          <span class="menu-text">Account</span>
+        </a>
+        <a mat-menu-item routerLink="/app-create-find-events">
+          <span class="menu-text">Create Events</span>
+        </a>
+        <a mat-menu-item routerLink="/app-edit-events">
+          <span class="menu-text">Edit Events</span>
+        </a>
+        <a mat-menu-item routerLink="/account">
+          <span class="menu-text">Saved Events</span>
+        </a>
+      </mat-menu>
+    </ng-template>
   </ul>
 </header>
+
+<router-outlet></router-outlet>
