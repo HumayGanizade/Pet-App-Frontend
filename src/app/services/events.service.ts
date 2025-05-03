@@ -13,6 +13,7 @@ export class EventsService {
   private apiBreeds = 'http://localhost:41433/dropdown-info/getAllBreedsByPetId';
   private apiCountries = 'http://localhost:41433/dropdown-info/getAllCountries';
   private apiCities = 'http://localhost:41433/dropdown-info/getAllCitiesByCountryId';
+  private justApi = 'http://localhost:41433';
 
   constructor(private http: HttpClient) {}
 
@@ -144,5 +145,18 @@ export class EventsService {
       'Content-Type': 'application/json',
     });
     return this.http.delete(`${this.eventUrl}/${id}`, { headers })
+  }
+
+  createRescueEvent(data: any): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.justApi}/rescue-event`, data, { headers });
   }
 }

@@ -18,9 +18,13 @@ export const routes: Routes = [
     path: 'app-find-events',
     loadComponent: () => import('./find-events/event.component').then(m => m.EventComponent)
   },
+  // {
+  //   path: 'app-create-events',
+  //   loadComponent: () => import('./create-event/create-event.component').then(m => m.CreateEventComponent)
+  // },
   {
-    path: 'app-create-find-events',
-    loadComponent: () => import('./create-event/create-event.component').then(m => m.CreateEventComponent)
+    path: 'app-create-all-events',
+    loadComponent: () => import('./create-all-events/create-all-events.component').then(m => m.CreateAllEventsComponent)
   },
   {
     path: 'app-find-events/:id',
