@@ -49,8 +49,8 @@ export class CreateRescueEventComponent implements OnInit {
       location: ['', Validators.required],
       contact_number: ['', Validators.required],
       gmail: ['', [Validators.required, Validators.email]],
-      petIds: [[]],
-      breedIds: [[]],
+      petId: ['', Validators.required],
+      breedId: ['', Validators.required],
       countryId: ['', Validators.required],
       cityId: ['', Validators.required],
     });
@@ -72,7 +72,7 @@ export class CreateRescueEventComponent implements OnInit {
       switchMap(countryId => countryId ? this.fetchCities(countryId) : of([]))
     );
 
-    this.breeds$ = this.form.get('petIds')!.valueChanges.pipe(
+    this.breeds$ = this.form.get('petId')!.valueChanges.pipe(
       startWith(''),
       distinctUntilChanged(),
       switchMap(petId => petId ? this.fetchBreeds(petId) : of([]))
@@ -143,4 +143,5 @@ export class CreateRescueEventComponent implements OnInit {
       }
     });
   }
+
 }

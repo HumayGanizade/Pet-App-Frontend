@@ -3,6 +3,7 @@ import {CreateEventComponent} from "../create-event/create-event.component";
 import {CreateRescueEventComponent} from "../create-rescue-event/create-rescue-event.component";
 import {CommonModule} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
+import {CreateLostAnimalEventComponent} from "../create-lost-animal-event/create-lost-animal-event.component";
 
 @Component({
   selector: 'app-create-all-events',
@@ -11,8 +12,8 @@ import {MatButtonModule} from "@angular/material/button";
     CommonModule,
     CreateEventComponent,
     CreateRescueEventComponent,
-    // CreateLostAnimalEventComponent,
-    MatButtonModule
+    MatButtonModule,
+    CreateLostAnimalEventComponent
   ],
   templateUrl: './create-all-events.component.html',
   styleUrl: './create-all-events.component.scss'
