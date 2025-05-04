@@ -159,4 +159,17 @@ export class EventsService {
     });
     return this.http.post(`${this.justApi}/rescue-event`, data, { headers });
   }
+
+  createLostAnimalEvent(data: any): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.justApi}/lost-animal-event`, data, { headers });
+  }
 }

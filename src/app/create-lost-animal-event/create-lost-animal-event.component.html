@@ -1,0 +1,134 @@
+<div class="form-container" *ngIf="isFiltersLoaded">
+  <form [formGroup]="filterForm" (ngSubmit)="createEvent()" class="filter-form">
+    <mat-card class="form-card">
+      <div class="upper-part">
+        <div class="image-upload-container" (click)="uploadImage()">
+          <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
+          <img *ngIf="imageUrl; else placeholder" [src]="imageUrl" class="uploaded-image"  alt=""/>
+          <ng-template #placeholder>
+            <div class="placeholder">
+              <p>Click to upload</p>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="input-section">
+          <mat-form-field class="example-full-width">
+            <mat-label>Animal Name</mat-label>
+            <input matInput placeholder="Lost Dog" formControlName="name">
+            <mat-error *ngIf="filterForm.get('name')?.invalid && filterForm.get('name')?.touched">
+              This field is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Age</mat-label>
+            <input matInput type="number" formControlName="age" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option value="male">Male</mat-option>
+              <mat-option value="female">Female</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Select Animal</mat-label>
+            <mat-select formControlName="petId">
+              <mat-option *ngFor="let pet of pets$ | async" [value]="pet.id">
+                {{ pet.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="full-width">
+            <mat-label>Breed</mat-label>
+            <mat-select formControlName="breedId">
+              <mat-option *ngFor="let breed of breeds$ | async" [value]="breed.id">
+                {{ breed.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Select Country</mat-label>
+            <mat-select formControlName="countryId">
+              <mat-option *ngFor="let country of countries$ | async" [value]="country.id">
+                {{ country.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Select City</mat-label>
+            <mat-select formControlName="cityId" required>
+              <mat-option value="">Select City</mat-option>
+              <mat-option *ngFor="let city of cities$ | async" [value]="city.id">
+                {{ city.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="filterForm.get('cityId')?.invalid && filterForm.get('cityId')?.touched">
+              This field is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Reward</mat-label>
+            <input matInput type="number" formControlName="reward" placeholder="0">
+            <span matTextPrefix>$&nbsp;</span>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Last Seen Date</mat-label>
+            <input matInput [matDatepicker]="datePicker" formControlName="date" required>
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+            <mat-datepicker #datePicker></mat-datepicker>
+            <mat-error *ngIf="filterForm.get('date')?.invalid && filterForm.get('startDate')?.touched">
+              This field is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="contact-row">
+        <mat-form-field class="full-width">
+          <mat-label>Location</mat-label>
+          <input matInput placeholder="Location" formControlName="location">
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Email" formControlName="gmail">
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Phone</mat-label>
+          <input matInput placeholder="Phone" formControlName="contact_number">
+        </mat-form-field>
+      </div>
+      <div class="info-plan">
+        <mat-form-field class="full-width" appearance="fill">
+          <textarea
+            matInput
+            placeholder="info"
+            formControlName="info"
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="10">
+          </textarea>
+        </mat-form-field>
+      </div>
+
+
+      <div class="button-row">
+        <button type="submit" mat-raised-button color="primary" [disabled]="isLoading">
+          {{ isLoading ? 'Creating...' : 'Create' }}
+        </button>
+      </div>
+    </mat-card>
+  </form>
+</div>
