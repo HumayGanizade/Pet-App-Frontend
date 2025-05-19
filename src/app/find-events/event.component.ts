@@ -89,28 +89,9 @@ export class EventComponent implements OnInit {
     );
   }
 
-  // fetchEvents() {
-  //   this.isLoading = true;
-  //   this.eventsService.getFilteredEvents(this.filterForm.value).subscribe({
-  //     next: (data) => {
-  //       this.events = Array.isArray(data)
-  //         ? data.map(event => ({
-  //           ...event,
-  //           photo: event.photo ? `data:image/jpeg;base64,${event.photo}` : null,
-  //         }))
-  //         : [];
-  //       this.isLoading = false;
-  //     },
-  //     error: (error) => {
-  //       console.error('Error fetching events', error);
-  //       this.isLoading = false;
-  //     }
-  //   });
-  // }
   fetchEvents() {
     this.isLoading = true;
 
-    // Fetch events based on current form values (will be empty initially)
     this.eventsService.getFilteredEvents(this.filterForm.value).subscribe({
       next: (data) => {
         this.events = Array.isArray(data)

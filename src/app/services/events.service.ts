@@ -70,6 +70,23 @@ export class EventsService {
     return this.http.get<any>(this.apiUrl, { params });
   }
 
+  getFilteredRescueEvents(filters: any): Observable<any> {
+    let params = new HttpParams();
+
+    Object.keys(filters).forEach((key) => {
+      if (filters[key] !== undefined && filters[key] !== null && filters[key] !== '') {
+        if (Array.isArray(filters[key]) && filters[key].length > 0) {
+          params = params.set(key, filters[key].join(','));
+        } else {
+          params = params.set(key, filters[key]);
+        }
+      }
+    });
+
+    return this.http.get<any>(`${this.justApi}/rescue-event/getAll`, { params });
+  }
+
+
   getEventsByUserId(): Observable<any> {
     const token = localStorage.getItem('authToken');
     const userId = this.getUserIdFromToken();
