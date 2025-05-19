@@ -19,6 +19,10 @@ export const routes: Routes = [
     loadComponent: () => import('./find-events/event.component').then(m => m.EventComponent)
   },
   {
+    path: 'app-find-rescue-events',
+    loadComponent: () => import('./find-rescue-events/find-rescue-events.component').then(m => m.FindRescueEventsComponent)
+  },
+  {
     path: 'app-create-all-events',
     loadComponent: () => import('./create-all-events/create-all-events.component').then(m => m.CreateAllEventsComponent)
   },
