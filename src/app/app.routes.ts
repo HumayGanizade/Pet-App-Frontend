@@ -23,6 +23,10 @@ export const routes: Routes = [
     loadComponent: () => import('./find-rescue-events/find-rescue-events.component').then(m => m.FindRescueEventsComponent)
   },
   {
+    path: 'app-find-lost-animal-events',
+    loadComponent: () => import('./find-lost-animal-events/find-lost-animal-events.component').then(m => m.FindLostAnimalEventsComponent)
+  },
+  {
     path: 'app-create-all-events',
     loadComponent: () => import('./create-all-events/create-all-events.component').then(m => m.CreateAllEventsComponent)
   },
