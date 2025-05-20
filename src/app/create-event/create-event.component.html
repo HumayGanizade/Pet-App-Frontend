@@ -142,8 +142,15 @@
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <input matInput placeholder="plan">
+        <input matInput placeholder="plan" formControlName="plan" required>
+        <mat-error *ngIf="filterForm.get('plan')?.invalid && filterForm.get('plan')?.touched">
+          This field is required
+        </mat-error>
       </mat-form-field>
+
+<!--      <mat-form-field class="full-width">-->
+<!--        <input matInput placeholder="plan">-->
+<!--      </mat-form-field>-->
     </div>
 
     <!-- Buttons -->

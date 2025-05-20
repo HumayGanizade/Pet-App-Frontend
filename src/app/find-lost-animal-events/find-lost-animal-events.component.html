@@ -1,7 +1,12 @@
 <div class="container">
-  <h4>Adoption Events</h4>
+  <h4>Lost Animals Events</h4>
   <form [formGroup]="filterForm" (ngSubmit)="fetchEvents()" class="filter-form">
     <div class="filter-group">
+      <mat-form-field class="example-full-width">
+        <mat-label>Event name</mat-label>
+        <input matInput placeholder="Ex. Dogs" formControlName="name">
+      </mat-form-field>
+
       <mat-form-field floatLabel="always">
         <mat-label>min age</mat-label>
         <input formControlName="minAge" matInput type="number" class="example-right-align" placeholder="0" />
@@ -10,6 +15,16 @@
       <mat-form-field floatLabel="always">
         <mat-label>max age</mat-label>
         <input formControlName="maxAge" matInput type="number" class="example-right-align" placeholder="0" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Select Country</mat-label>
+        <mat-select formControlName="colorId">
+          <mat-option value="">Select Color</mat-option>
+          <mat-option *ngFor="let color of colors$ | async" [value]="color.id">
+            {{ color.name }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
@@ -61,12 +76,12 @@
 
 <div class="events-list">
   <div *ngIf="isLoading">Loading...</div>
-  <div *ngIf="!isLoading && rescueEvents.length === 0">
+  <div *ngIf="!isLoading && lostAnimalEvents.length === 0">
     No events found.
   </div>
 
   <div *ngIf="!isLoading" class="events-grid">
-    <div *ngFor="let event of rescueEvents" class="event-card" (click)="goToEvent(event.id)">
+    <div *ngFor="let event of lostAnimalEvents" class="event-card" (click)="goToEvent(event.id)">
       <div class="image-placeholder">
         <img *ngIf="event.photo; else placeholder" [src]="event.photo" class="event-image" alt="Event Image"/>
         <ng-template #placeholder>
@@ -75,7 +90,7 @@
       </div>
       <div class="event-details">
         <h3>{{ event.name }}</h3>
-        <p>{{ event.age}} y.o.</p>
+        <p>{{ event.age}} $</p>
       </div>
     </div>
   </div>
