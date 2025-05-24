@@ -4,15 +4,15 @@ import {ActivatedRoute} from "@angular/router";
 import {NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-rescue-event-page',
+  selector: 'app-lost-animal-event-page',
   standalone: true,
   imports: [
     NgIf
   ],
-  templateUrl: './rescue-event-page.component.html',
-  styleUrl: './rescue-event-page.component.scss'
+  templateUrl: './lost-animal-event-page.component.html',
+  styleUrl: './lost-animal-event-page.component.scss'
 })
-export class RescueEventPageComponent implements OnInit{
+export class LostAnimalEventPageComponent implements OnInit{
   event: any;
   loading: boolean = true;
 
@@ -31,14 +31,13 @@ export class RescueEventPageComponent implements OnInit{
   }
 
   getEventById(eventId: string) {
-    this.eventService.getRescueEventById(eventId).subscribe({
+    this.eventService.getLostAnimalEventById(eventId).subscribe({
       next: (data) => {
-        console.log('Fetched event:', data);
         this.event = this.transformEventData(data);
         this.loading = false;
       },
       error: () => {
-        console.log('rescueEvent not found');
+        console.log('lostAnimalEvent not found');
         this.loading = false;
       },
     });

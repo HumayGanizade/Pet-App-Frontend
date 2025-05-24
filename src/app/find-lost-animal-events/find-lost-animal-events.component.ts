@@ -148,6 +148,6 @@ export class FindLostAnimalEventsComponent {
   }
 
   goToEvent(eventId: string) {
-    this.router.navigate(['/app-find-events', eventId]);
+    this.router.navigate(['/app-find-lost-animal-events', eventId]);
   }
 }

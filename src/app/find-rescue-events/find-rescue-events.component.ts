@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {forkJoin, Observable, of} from "rxjs";
 import {EventsService} from "../services/events.service";
 import {distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
-import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
@@ -21,7 +21,6 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     ReactiveFormsModule,
     NgForOf,
     NgIf,
-    DatePipe,
     AsyncPipe,
     MatFormFieldModule,
     MatSelectModule,
@@ -141,6 +140,6 @@ export class FindRescueEventsComponent implements OnInit {
   }
 
   goToEvent(eventId: string) {
-    this.router.navigate(['/app-find-events', eventId]);
+    this.router.navigate(['/app-find-rescue-events', eventId]);
   }
 }

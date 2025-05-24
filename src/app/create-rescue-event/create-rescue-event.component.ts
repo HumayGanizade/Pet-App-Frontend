@@ -33,6 +33,7 @@ export class CreateRescueEventComponent implements OnInit {
   breeds$!: Observable<{ id: string, name: string }[]>;
   countries$!: Observable<{ id: string, name: string }[]>;
   cities$!: Observable<{ id: string, name: string }[]>;
+  colors$!: Observable<{ id: string, name: string }[]>;
 
   @ViewChild('fileInput') fileInput!: ElementRef;
   imageUrl: string | null = null;
@@ -44,6 +45,7 @@ export class CreateRescueEventComponent implements OnInit {
       name: ['', Validators.required],
       age: [null, [Validators.required, Validators.min(0)]],
       gender: ['', Validators.required],
+      colorId: ['', Validators.required],
       photo: [''],
       info: ['', Validators.required],
       location: ['', Validators.required],
@@ -61,9 +63,11 @@ export class CreateRescueEventComponent implements OnInit {
     forkJoin({
       pets: this.fetchPets(),
       countries: this.fetchCountries(),
-    }).subscribe(({ pets, countries }) => {
+      colors: this.fetchColors(),
+    }).subscribe(({ pets, countries, colors }) => {
       this.pets$ = of(pets);
       this.countries$ = of(countries);
+      this.colors$ = of(colors);
       this.isFiltersLoaded = true;
     });
     this.cities$ = this.form.get('countryId')!.valueChanges.pipe(
@@ -100,6 +104,12 @@ export class CreateRescueEventComponent implements OnInit {
   private fetchCities(countryId: string) {
     return this.eventsService.getAllCitiesByCountryId(countryId).pipe(
       map((cities: any) => cities.map((city: any) => ({ id: city.id, name: city.name })).sort((a: { name: string; }, b: { name: any; }) => a.name.localeCompare(b.name)))
+    );
+  }
+
+  private fetchColors() {
+    return this.eventsService.getColors().pipe(
+      map((colors: any) => colors.map((color: any) => ({ id: color.id, name: color.name })).sort((a: { name: string; }, b: { name: any; }) => a.name.localeCompare(b.name)))
     );
   }
 
@@ -143,5 +153,4 @@ export class CreateRescueEventComponent implements OnInit {
       }
     });
   }
-
 }
