@@ -35,7 +35,23 @@ export const routes: Routes = [
     loadComponent: () => import('./event-page/event-page.component').then(m => m.EventPageComponent)
   },
   {
+    path: 'app-find-rescue-events/:id',
+    loadComponent: () => import('./rescue-event-page/rescue-event-page.component').then(m => m.RescueEventPageComponent)
+  },
+  {
+    path: 'app-find-lost-animal-events/:id',
+    loadComponent: () => import('./lost-animal-event-page/lost-animal-event-page.component').then(m => m.LostAnimalEventPageComponent)
+  },
+  {
+    path: 'app-edit-all-events',
+    loadComponent: () => import('./edit-all-events/edit-all-events.component').then(m => m.EditAllEventsComponent)
+  },
+  {
     path: 'app-edit-events',
     loadComponent: () => import('./edit-events/edit-events.component').then(m => m.EditEventsComponent)
+  },
+  {
+    path: 'app-edit-general-event-page/:id',
+    loadComponent: () => import('./edit-general-event-page/edit-general-event-page.component').then(m => m.EditGeneralEventPageComponent)
   },
 ];

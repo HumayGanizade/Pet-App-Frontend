@@ -32,6 +32,15 @@ export class EventsService {
   getEventById(eventId: string) {
     return this.http.get<any>(`${this.eventUrl}/getEventById/${eventId}`);
   }
+
+  getRescueEventById(rescueEventId: string) {
+    return this.http.get<any>(`${this.justApi}/rescue-event/getById/${rescueEventId}`);
+  }
+
+  getLostAnimalEventById(lostAnimalEventId: string) {
+    return this.http.get<any>(`${this.justApi}/lost-animal-event/${lostAnimalEventId}`);
+  }
+
   createEvent(body: any): Observable<any> {
     const token = localStorage.getItem('authToken');
     const userId = this.getUserIdFromToken();
@@ -143,7 +152,7 @@ export class EventsService {
   }
 
   getColors() {
-    return this.http.get(`${this.justApi}/lost-animal-event/getColors`);
+    return this.http.get(`${this.justApi}/dropdown-info/getAllPetColors`);
   }
 
   getGeneralEventTypes() {
@@ -161,10 +170,6 @@ export class EventsService {
         name: "lost animals"
       }
     ]
-  }
-
-  editEventById() {
-    return true;
   }
 
   deleteEventById(id: string) {
@@ -209,5 +214,18 @@ export class EventsService {
       'Content-Type': 'application/json',
     });
     return this.http.post(`${this.justApi}/lost-animal-event`, data, { headers });
+  }
+
+  editEventById(id: string | null | undefined, data: any): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put(`${this.justApi}/events/${id}`, data, { headers });
   }
 }

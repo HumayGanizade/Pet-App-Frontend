@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatButton, MatButtonModule} from "@angular/material/button";
 import { EventsService } from "../services/events.service";
 import { Router } from "@angular/router";
@@ -10,6 +10,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatDialogModule} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-edit-events',
@@ -26,7 +27,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatOptionModule
+    MatOptionModule,
+    MatDialogModule
   ],
   providers: [DatePipe],
   templateUrl: './edit-events.component.html',
@@ -35,9 +37,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 export class EditEventsComponent implements OnInit {
   events: any[] = [];
   generalEventTypes: any[] = [];
-  selectedEventType: any;
 
-  constructor(private eventService: EventsService, private router: Router, private datePipe: DatePipe,  private cdr: ChangeDetectorRef) {}
+  constructor(private eventService: EventsService, private router: Router, private datePipe: DatePipe) {}
 
   ngOnInit() {
     this.getGeneralEventTypes();
@@ -70,8 +71,7 @@ export class EditEventsComponent implements OnInit {
     this.eventService.deleteEventById(id).subscribe({
       next: () => {
         this.events = this.events.filter((event) => event.id !== id);
-        console.log('Event deleted successfully!');
-        this.cdr.detectChanges();
+        console.log('Events after delete:', this.events);
       },
       error: (error) => {
         console.error('Error deleting event:', error);
@@ -79,7 +79,11 @@ export class EditEventsComponent implements OnInit {
     });
   }
 
-  trackByEventId(event: any): string {
+  trackByEventId(index: number, event: any): string {
     return event.id;
+  }
+
+  editEvent(id: string): void {
+    this.router.navigate(['/app-edit-general-event-page', id]);
   }
 }

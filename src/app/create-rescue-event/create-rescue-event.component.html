@@ -50,6 +50,15 @@
           </mat-form-field>
 
           <mat-form-field>
+            <mat-label>Select Color</mat-label>
+            <mat-select formControlName="colorId">
+              <mat-option *ngFor="let color of colors$ | async" [value]="color.id">
+                {{ color.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
             <mat-label>Country</mat-label>
             <mat-select formControlName="countryId" required>
               <mat-option *ngFor="let country of countries$ | async" [value]="country.id">

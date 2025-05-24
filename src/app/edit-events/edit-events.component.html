@@ -1,27 +1,25 @@
-<div class="event-list">
-  <mat-form-field appearance="fill">
-    <mat-label>Select Type</mat-label>
-    <mat-select [(ngModel)]="selectedEventType">
-      <mat-option *ngFor="let type of generalEventTypes" [value]="type.id">
-        {{ type.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+<div *ngFor="let event of events; trackBy: trackByEventId"
+     class="event-card">
 
-  <div *ngFor="let event of events; trackBy: trackByEventId" class="event-card">
-    <img *ngIf="event.photo; else placeholder" [src]="event.photo" alt="Event Photo" class="event-image">
-    <ng-template #placeholder>
-      <div class="no-image">No Image</div>
-    </ng-template>
-    <div class="event-info">
-      <h3>{{ event.name }}</h3>
-      <p>Date: {{ event.startDate }} - {{ event.endDate }}</p>
-      <p>Price: {{ event.price }}</p>
-    </div>
-    <div class="action-buttons">
-      <button mat-button color="warn" (click)="deleteEvent(event.id)">Delete</button>
-    </div>
+  <img *ngIf="event.photo; else placeholder"
+       [src]="event.photo"
+       alt="Event Photo"
+       class="event-image">
+
+  <ng-template #placeholder>
+    <div class="no-image">No Image</div>
+  </ng-template>
+
+  <div class="event-info" (click)="editEvent(event.id)">
+    <h3>{{ event.name }}</h3>
+    <p>Date: {{ event.startDate }} - {{ event.endDate }}</p>
+    <p>Price: {{ event.price }}</p>
   </div>
 
-
+  <div class="action-buttons">
+    <button mat-button color="warn"
+            (click)="deleteEvent(event.id); $event.stopPropagation()">Delete</button>
+    <button mat-button color="primary"
+            (click)="editEvent(event.id); $event.stopPropagation()">Edit</button>
+  </div>
 </div>

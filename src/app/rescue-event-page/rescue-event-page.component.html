@@ -1,1 +1,63 @@
-<p>rescue-event-page works!</p>
+<div class="form-container" *ngIf="event && !loading; else loadingState">
+  <h3>{{ event?.name }}</h3>
+
+  <div class="upper-container">
+    <div class="image-container">
+      <img *ngIf="event?.photo; else placeholder" [src]="event?.photo" class="uploaded-image" alt="Event Image"/>
+      <ng-template #placeholder>
+        <div class="placeholder">
+          <p>No Image</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="main-info-container">
+      <div class="main-info">
+        <div>{{ event?.country?.name }}, {{ event?.city?.name }}</div>
+      </div>
+      <div class="main-info">
+        <div>{{ event?.gender }}</div>
+      </div>
+      <div class="main-info">
+        <div>{{ event?.age }} y.o.</div>
+      </div>
+      <div class="main-info">
+        <div>{{ event?.color }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lower-info-container">
+    <div class="lower-info">
+      <div><p>Animal:</p></div>
+      <div>{{ event?.pet }}</div>
+    </div>
+
+    <div class="lower-info">
+      <div><p>Breed:</p></div>
+      <div>{{ event?.breed }}</div>
+    </div>
+
+    <div class="lower-info">
+      <div><p>Info:</p></div>
+      <div>{{ event?.info }}</div>
+    </div>
+    <div class="lower-info">
+      <div><p>Address:</p></div>
+      <div>{{ event?.location }}</div>
+    </div>
+    <div class="lower-info">
+      <div><p>Contact Number:</p></div>
+      <div>{{ event?.contact_number }}</div>
+    </div>
+    <div class="lower-info">
+      <div><p>Contact Email:</p></div>
+      <div>{{ event?.gmail }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading state -->
+<ng-template #loadingState>
+  <div class="loading">Loading...</div>
+</ng-template>

@@ -41,6 +41,7 @@ export class CreateLostAnimalEventComponent implements OnInit{
   breeds$!: Observable<{ id: string, name: string }[]>;
   countries$!: Observable<{ id: string, name: string }[]>;
   cities$!: Observable<{ id: string, name: string }[]>;
+  colors$!: Observable<{ id: string, name: string }[]>;
 
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -49,6 +50,7 @@ export class CreateLostAnimalEventComponent implements OnInit{
       name: ['', Validators.required],
       age: [null, [Validators.required, Validators.min(0)]],
       gender: ['', Validators.required],
+      colorId: ['', Validators.required],
       photo: [''],
       info: ['', Validators.required],
       location: ['', Validators.required],
@@ -69,9 +71,11 @@ export class CreateLostAnimalEventComponent implements OnInit{
     forkJoin({
       pets: this.fetchPets(),
       countries: this.fetchCountries(),
-    }).subscribe(({ pets, countries }) => {
+      colors: this.fetchColors(),
+    }).subscribe(({ pets, countries, colors }) => {
       this.pets$ = of(pets);
       this.countries$ = of(countries);
+      this.colors$ = of(colors);
       this.isFiltersLoaded = true;
     });
 
@@ -161,6 +165,12 @@ export class CreateLostAnimalEventComponent implements OnInit{
   private fetchBreeds(petId: string) {
     return this.eventsService.getAllBreedsByPetId(petId).pipe(
       map((breeds: any) => breeds.map((breed: any) => ({ id: breed.id, name: breed.name })).sort((a: { name: string; }, b: { name: any; }) => a.name.localeCompare(b.name)))
+    );
+  }
+
+  private fetchColors() {
+    return this.eventsService.getColors().pipe(
+      map((colors: any) => colors.map((color: any) => ({ id: color.id, name: color.name })).sort((a: { name: string; }, b: { name: any; }) => a.name.localeCompare(b.name)))
     );
   }
 }

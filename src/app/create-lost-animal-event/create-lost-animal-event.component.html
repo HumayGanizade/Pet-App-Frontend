@@ -94,6 +94,15 @@
       </div>
 
       <div class="contact-row">
+        <mat-form-field>
+          <mat-label>Select Color</mat-label>
+          <mat-select formControlName="colorId">
+            <mat-option *ngFor="let color of colors$ | async" [value]="color.id">
+              {{ color.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
         <mat-form-field class="full-width">
           <mat-label>Location</mat-label>
           <input matInput placeholder="Location" formControlName="location">
