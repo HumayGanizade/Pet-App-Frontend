@@ -1,0 +1,32 @@
+<div class="tabs">
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="selected === 'general'"
+    (click)="select('general')"
+  >
+    General
+  </button>
+  <button
+    mat-raised-button
+    color="accent"
+    [disabled]="selected === 'rescue'"
+    (click)="select('rescue')"
+  >
+    Rescue
+  </button>
+  <button
+    mat-raised-button
+    color="warn"
+    [disabled]="selected === 'lost'"
+    (click)="select('lost')"
+  >
+    Lost Animals
+  </button>
+</div>
+
+<div class="event-form-container">
+  <app-edit-events *ngIf="selected === 'general'"></app-edit-events>
+<!--  <app-create-rescue-event *ngIf="selected === 'rescue'"></app-create-rescue-event>-->
+<!--  <app-create-lost-animal-event *ngIf="selected === 'lost'"></app-create-lost-animal-event>-->
+</div>
