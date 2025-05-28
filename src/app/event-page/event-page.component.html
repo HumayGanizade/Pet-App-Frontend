@@ -30,26 +30,17 @@
   <div class="lower-info-container">
     <div class="lower-info">
       <p>Animal:</p>
-      <ng-container *ngIf="event.pets?.length > 1; else singleAnimal">
-        <select>
-          <option *ngFor="let pet of event.pets" [value]="pet">{{ pet.name }}</option>
-        </select>
-      </ng-container>
-      <ng-template #singleAnimal>
-        <div>{{ event.pets }}</div>
-      </ng-template>
+      <div>
+        {{ getPetsNames(event.pets) }}
+      </div>
     </div>
     <div class="lower-info">
       <p>Breeds:</p>
-      <ng-container *ngIf="event.breeds?.length > 1; else singleBreed">
-        <select>
-          <option *ngFor="let breed of event.breeds" [value]="breed">{{ breed.name }}</option>
-        </select>
-      </ng-container>
-      <ng-template #singleBreed>
-        <div>{{ event.breeds }}</div>
-      </ng-template>
+      <div>
+        {{ getBreedNames(event.breeds) }}
+      </div>
     </div>
+
     <div class="lower-info">
       <div><p>Info:</p></div>
       <div>{{ event.info }}</div>
@@ -70,6 +61,68 @@
       <div><p>Contact Email:</p></div>
       <div>{{ event.gmail }}</div>
     </div>
+  </div>
+</div>
+
+<!-- Comment Section START -->
+<div class="comments-section" *ngIf="event">
+  <h4>Comments</h4>
+
+  <!-- Add New Comment -->
+  <form [formGroup]="commentForm" (ngSubmit)="addComment(event.id)" class="comment-form">
+    <mat-form-field appearance="fill" class="full-width">
+      <textarea matInput placeholder="Write a comment..." formControlName="text"></textarea>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Add Comment</button>
+  </form>
+
+  <!-- Comments List -->
+  <div *ngFor="let comment of comments" class="comment-card">
+    <div class="comment-header">
+      <img src="assets/Sample_User_Icon.png" alt="User" class="user-avatar" />
+      <span class="user-name">{{ comment.user?.name || 'User' }}</span>
+      <span class="comment-date">{{ comment.createdAt | date:'short' }}</span>
+    </div>
+
+    <div class="comment-body" *ngIf="editingCommentId !== comment.id; else editForm">
+      <p>{{ comment.text }}</p>
+      <small *ngIf="comment.isEdited">(edited)</small>
+    </div>
+
+    <ng-template #editForm>
+      <form (ngSubmit)="editComment(comment.id)">
+        <mat-form-field appearance="fill" class="full-width">
+          <textarea matInput [(ngModel)]="editingText" name="editText"></textarea>
+        </mat-form-field>
+        <button mat-button type="submit" color="primary">Save</button>
+        <button mat-button type="button" color="warn" (click)="cancelEdit()">Cancel</button>
+      </form>
+    </ng-template>
+
+    <div class="comment-actions">
+      <button mat-button color="accent" (click)="setEditing(comment.id, comment.text)">Edit</button>
+      <button mat-button color="warn" (click)="deleteComment(comment.id)">Delete</button>
+    </div>
+
+    <!-- Replies -->
+<!--    <div class="replies" *ngIf="(replies?.[comment.id]?.length ?? 0) > 0">-->
+<!--      <div *ngFor="let reply of replies[comment.id]" class="reply">-->
+<!--        <img src="assets/Sample_User_Icon.png" alt="User" class="user-avatar small" />-->
+<!--        <div class="reply-content">-->
+<!--          <span class="user-name">{{ reply.user?.name || 'User' }}</span>-->
+<!--          <p>{{ reply.text }}</p>-->
+<!--          <small>{{ reply.createdAt | date:'short' }}</small>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+    <!-- Reply Form -->
+<!--    <form *ngIf="replyForms[comment.id]" [formGroup]="replyForms[comment.id]" (ngSubmit)="addReply(comment.id, event.id)" class="reply-form">-->
+<!--      <mat-form-field appearance="fill" class="full-width">-->
+<!--        <input matInput placeholder="Write a reply..." formControlName="text" />-->
+<!--      </mat-form-field>-->
+<!--      <button mat-button type="submit" color="primary">Reply</button>-->
+<!--    </form>-->
   </div>
 </div>
 

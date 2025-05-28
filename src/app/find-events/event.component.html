@@ -69,7 +69,7 @@
 
       <mat-form-field appearance="fill">
         <mat-label>Select Animal</mat-label>
-        <mat-select formControlName="petIds" multiple>
+        <mat-select formControlName="petsIds" multiple>
           <mat-option *ngFor="let pet of pets$ | async" [value]="pet.id">
             {{ pet.name }}
           </mat-option>

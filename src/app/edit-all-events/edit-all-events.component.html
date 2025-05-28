@@ -27,6 +27,6 @@
 
 <div class="event-form-container">
   <app-edit-events *ngIf="selected === 'general'"></app-edit-events>
-<!--  <app-create-rescue-event *ngIf="selected === 'rescue'"></app-create-rescue-event>-->
-<!--  <app-create-lost-animal-event *ngIf="selected === 'lost'"></app-create-lost-animal-event>-->
+  <app-edit-rescue-events *ngIf="selected === 'rescue'"></app-edit-rescue-events>
+  <app-edit-lost-animal-events *ngIf="selected === 'lost'"></app-edit-lost-animal-events>
 </div>
