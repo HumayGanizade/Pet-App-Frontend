@@ -1,0 +1,24 @@
+<div *ngFor="let event of events; trackBy: trackLostAnimalEventId"
+     class="event-card">
+
+  <img *ngIf="event.photo; else placeholder"
+       [src]="event.photo"
+       alt="Event Photo"
+       class="event-image">
+
+  <ng-template #placeholder>
+    <div class="no-image">No Image</div>
+  </ng-template>
+
+  <div class="event-info" (click)="editLostAnimalEvent(event.id)">
+    <h3>{{ event.name }}</h3>
+    <p>Age: {{ event.age }}</p>
+  </div>
+
+  <div class="action-buttons">
+    <button mat-button color="warn"
+            (click)="deleteEvent(event.id); $event.stopPropagation()">Delete</button>
+    <button mat-button color="primary"
+            (click)="editLostAnimalEvent(event.id); $event.stopPropagation()">Edit</button>
+  </div>
+</div>

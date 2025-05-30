@@ -56,6 +56,50 @@
   </div>
 </div>
 
+
+<!-- Comment Section START -->
+<div class="comments-section" *ngIf="event">
+  <h4>Comments</h4>
+
+  <!-- Add New Comment -->
+  <form [formGroup]="commentForm" (ngSubmit)="addComment(event.id)" class="comment-form">
+    <mat-form-field appearance="fill" class="full-width">
+      <textarea matInput placeholder="Write a comment..." formControlName="text"></textarea>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Add Comment</button>
+  </form>
+
+  <!-- Comments List -->
+  <div *ngFor="let comment of comments" class="comment-card">
+    <div class="comment-header">
+      <img src="assets/Sample_User_Icon.png" alt="User" class="user-avatar" />
+      <span class="user-name">{{ comment.user?.name || 'User' }}</span>
+      <span class="comment-date">{{ comment.createdAt | date:'short' }}</span>
+    </div>
+
+    <div class="comment-body" *ngIf="editingCommentId !== comment.id; else editForm">
+      <p>{{ comment.text }}</p>
+      <small *ngIf="comment.isEdited">(edited)</small>
+    </div>
+
+    <ng-template #editForm>
+      <form (ngSubmit)="editComment(comment.id)">
+        <mat-form-field appearance="fill" class="full-width">
+          <textarea matInput [(ngModel)]="editingText" name="editText"></textarea>
+        </mat-form-field>
+        <button mat-button type="submit" color="primary">Save</button>
+        <button mat-button type="button" color="warn" (click)="cancelEdit()">Cancel</button>
+      </form>
+    </ng-template>
+
+    <div class="comment-actions">
+      <button mat-button color="accent" (click)="setEditing(comment.id, comment.text)">Edit</button>
+      <button mat-button color="warn" (click)="deleteComment(comment.id)">Delete</button>
+    </div>
+  </div>
+</div>
+
+
 <!-- Loading state -->
 <ng-template #loadingState>
   <div class="loading">Loading...</div>

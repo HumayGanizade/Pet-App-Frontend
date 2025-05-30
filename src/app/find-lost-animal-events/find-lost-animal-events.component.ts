@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {forkJoin, Observable, of} from "rxjs";
 import {distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
@@ -29,7 +29,7 @@ import {MatSelect} from "@angular/material/select";
   templateUrl: './find-lost-animal-events.component.html',
   styleUrl: './find-lost-animal-events.component.scss'
 })
-export class FindLostAnimalEventsComponent {
+export class FindLostAnimalEventsComponent implements OnInit{
   filterForm!: FormGroup;
   lostAnimalEvents: any[] = [];
   isFiltersLoaded = false;
@@ -84,8 +84,12 @@ export class FindLostAnimalEventsComponent {
 
   fetchEvents() {
     this.isLoading = true;
-
-    this.eventsService.getFilteredLostAnimalsEvents(this.filterForm.value).subscribe({
+    const formValue = this.filterForm.value;
+    const params = {
+      ...formValue,
+      breedIds: Array.isArray(formValue.breedIds) ? formValue.breedIds.join(',') : '',
+    };
+    this.eventsService.getFilteredLostAnimalsEvents(params).subscribe({
       next: (data) => {
         this.lostAnimalEvents = Array.isArray(data)
           ? data.map(event => ({

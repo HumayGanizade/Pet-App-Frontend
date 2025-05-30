@@ -1,0 +1,155 @@
+<div class="form-container">
+  <form [formGroup]="filterForm" (ngSubmit)="updateEvent()" class="filter-form">
+    <mat-card class="form-card">
+
+      <div class="upper-part">
+        <div class="image-upload-container" (click)="uploadImage()">
+          <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
+          <img *ngIf="imageUrl; else placeholder" [src]="imageUrl" class="uploaded-image"  alt=""/>
+          <ng-template #placeholder>
+            <div class="placeholder">
+              <p>Click to upload</p>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="input-section">
+          <mat-form-field class="example-full-width">
+            <mat-label>Event name</mat-label>
+            <input matInput placeholder="Dog Event" formControlName="name" required>
+            <mat-error *ngIf="filterForm.get('name')?.invalid && filterForm.get('name')?.touched">
+              This field is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Age</mat-label>
+            <input matInput placeholder="Age" formControlName="age" required>
+            <mat-error *ngIf="filterForm.get('age')?.invalid && filterForm.get('age')?.touched">
+              This field is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option value="male">Male</mat-option>
+              <mat-option value="female">Female</mat-option>
+              <mat-error *ngIf="filterForm.get('gender')?.invalid && filterForm.get('gender')?.touched">
+                This field is required
+              </mat-error>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Select Color</mat-label>
+            <mat-select formControlName="colorId">
+              <mat-option *ngFor="let color of colors$ | async" [value]="color.id">
+                {{ color.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Select Animal</mat-label>
+            <mat-select formControlName="petId">
+              <mat-option *ngFor="let pet of pets$ | async" [value]="pet.id">
+                {{ pet.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Select Breed</mat-label>
+            <mat-select formControlName="breedId">
+              <mat-option *ngFor="let breed of breeds$ | async" [value]="breed.id">
+                {{ breed.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Select Country</mat-label>
+            <mat-select formControlName="countryId" required>
+              <mat-option value="">Select Country</mat-option>
+              <mat-option *ngFor="let country of countries$ | async" [value]="country.id">
+                {{ country.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="filterForm.get('countryId')?.invalid && filterForm.get('countryId')?.touched">
+              This field is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Select City</mat-label>
+            <mat-select formControlName="cityId" required>
+              <mat-option value="">Select City</mat-option>
+              <mat-option *ngFor="let city of cities$ | async" [value]="city.id">
+                {{ city.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="filterForm.get('cityId')?.invalid && filterForm.get('cityId')?.touched">
+              This field is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="contact-row">
+        <mat-form-field class="full-width">
+          <mat-label>Location</mat-label>
+          <input matInput placeholder="location" formControlName="location" required>
+          <mat-error *ngIf="filterForm.get('location')?.invalid && filterForm.get('location')?.touched">
+            This field is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Reward</mat-label>
+          <input matInput type="number" formControlName="reward" placeholder="0">
+          <span matTextPrefix>$&nbsp;</span>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Last Seen Date</mat-label>
+          <input matInput [matDatepicker]="datePicker" formControlName="date" required>
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+          <mat-datepicker #datePicker></mat-datepicker>
+          <mat-error *ngIf="filterForm.get('date')?.invalid && filterForm.get('startDate')?.touched">
+            This field is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Email" formControlName="gmail" required>
+          <mat-error *ngIf="filterForm.get('gmail')?.invalid && filterForm.get('gmail')?.touched">
+            This field is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>Phone</mat-label>
+          <input matInput placeholder="phone" formControlName="contact_number" required>
+          <mat-error *ngIf="filterForm.get('phone')?.invalid && filterForm.get('phone')?.touched">
+            This field is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="info-plan">
+        <mat-form-field class="full-width">
+          <input matInput placeholder="info" formControlName="info" required>
+          <mat-error *ngIf="filterForm.get('info')?.invalid && filterForm.get('info')?.touched">
+            This field is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="button-row">
+        <button type="submit" mat-raised-button color="primary" class="create">Update</button>
+        <button mat-raised-button color="warn" class="cancel">Cancel</button>
+      </div>
+    </mat-card>
+  </form>
+</div>
+

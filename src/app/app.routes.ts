@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-
+//hi
 export const routes: Routes = [
   {
     path: '',
@@ -51,7 +51,23 @@ export const routes: Routes = [
     loadComponent: () => import('./edit-events/edit-events.component').then(m => m.EditEventsComponent)
   },
   {
+    path: 'app-edit-rescue-events',
+    loadComponent: () => import('./edit-rescue-events/edit-rescue-events.component').then(m => m.EditRescueEventsComponent)
+  },
+  {
+    path: 'app-edit-lost-animal-events',
+    loadComponent: () => import('./edit-lost-animal-events/edit-lost-animal-events.component').then(m => m.EditLostAnimalEventsComponent)
+  },
+  {
     path: 'app-edit-general-event-page/:id',
     loadComponent: () => import('./edit-general-event-page/edit-general-event-page.component').then(m => m.EditGeneralEventPageComponent)
+  },
+  {
+    path: 'app-edit-rescue-event-page/:id',
+    loadComponent: () => import('./edit-rescue-event-page/edit-rescue-event-page.component').then(m => m.EditRescueEventPageComponent)
+  },
+  {
+    path: 'app-edit-lost-animal-event-page/:id',
+    loadComponent: () => import('./edit-lost-animal-event-page/edit-lost-animal-event-page.component').then(m => m.EditLostAnimalEventPageComponent)
   },
 ];

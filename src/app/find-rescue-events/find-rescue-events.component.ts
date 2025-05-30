@@ -89,8 +89,16 @@ export class FindRescueEventsComponent implements OnInit {
 
   fetchEvents() {
     this.isLoading = true;
+    console.log(this.filterForm.value);
 
-    this.eventsService.getFilteredRescueEvents(this.filterForm.value).subscribe({
+    const filters = this.filterForm.value;
+
+    const params = {
+      ...filters,
+      breedIds: Array.isArray(filters.breedIds) ? filters.breedIds.join(',') : '',
+    };
+
+    this.eventsService.getFilteredRescueEvents(params).subscribe({
       next: (data) => {
         this.rescueEvents = Array.isArray(data)
           ? data.map(event => ({
@@ -106,6 +114,35 @@ export class FindRescueEventsComponent implements OnInit {
       }
     });
   }
+  // fetchEvents() {
+  //   this.isLoading = true;
+  //
+  //   console.log('🛠 Отправляем фильтр:', this.filterForm.value);  // Добавь это!
+  //
+  //
+  //   const filters = this.filterForm.value;
+  //   const params = {
+  //     ...filters,
+  //     breedIds: filters.breedIds?.join(',') || '',
+  //   };
+  //
+  //   this.eventsService.getFilteredRescueEvents(params).subscribe({
+  //     next: (data) => {
+  //       this.rescueEvents = Array.isArray(data)
+  //         ? data.map(event => ({
+  //           ...event,
+  //           photo: event.photo ? `data:image/jpeg;base64,${event.photo}` : null,
+  //         }))
+  //         : [];
+  //       this.isLoading = false;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error fetching events', error);
+  //       this.isLoading = false;
+  //     }
+  //   });
+  // }
+
 
   fetchPets() {
     return this.eventsService.getPets().pipe(

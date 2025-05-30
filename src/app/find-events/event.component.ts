@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { EventsService } from "../services/events.service";
-import {Observable, forkJoin, of} from "rxjs";
-import { map, switchMap, distinctUntilChanged, startWith } from "rxjs/operators";
-import { AsyncPipe, DatePipe, NgForOf, NgIf } from "@angular/common";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatSelectModule } from "@angular/material/select";
-import { MatInputModule } from "@angular/material/input";
-import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatNativeDateModule } from "@angular/material/core";
-import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {EventsService} from "../services/events.service";
+import {forkJoin, Observable, of} from "rxjs";
+import {distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
+import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
+import {MatInputModule} from "@angular/material/input";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {Router} from "@angular/router";
 
 @Component({
@@ -55,8 +55,8 @@ export class EventComponent implements OnInit {
       maxPrice: [''],
       countryId: [''],
       cityId: [''],
-      petIds: [''],
-      breedIds: [''],
+      petsIds: [[]],
+      breedIds: [[]],
       name: [''],
     });
   }
@@ -82,17 +82,40 @@ export class EventComponent implements OnInit {
       switchMap(countryId => countryId ? this.fetchCities(countryId) : [])
     );
 
-    this.breeds$ = this.filterForm.get('petIds')!.valueChanges.pipe(
-      startWith(''),
+    this.breeds$ = this.filterForm.get('petsIds')!.valueChanges.pipe(
+      startWith([]),
       distinctUntilChanged(),
-      switchMap(petId => petId ? this.fetchBreeds(petId) : [])
+      switchMap((petIds: string[]) => {
+        if (!petIds || petIds.length === 0) return of([]);
+
+        const breedObservables = petIds.map(petId => this.fetchBreeds(petId));
+
+        return forkJoin(breedObservables).pipe(
+          map(breedsArrays => {
+            const allBreeds = breedsArrays.flat();
+            return allBreeds.filter(
+              (breed, index, self) =>
+                index === self.findIndex(b => b.id === breed.id)
+            );
+          })
+        );
+      })
     );
+
+
   }
 
   fetchEvents() {
     this.isLoading = true;
 
-    this.eventsService.getFilteredEvents(this.filterForm.value).subscribe({
+    const formValue = this.filterForm.value;
+    const params = {
+      ...formValue,
+      petsIds: Array.isArray(formValue.petsIds) ? formValue.petsIds.join(',') : '',
+      breedIds: Array.isArray(formValue.breedIds) ? formValue.breedIds.join(',') : '',
+    };
+
+    this.eventsService.getFilteredEvents(params).subscribe({
       next: (data) => {
         this.events = Array.isArray(data)
           ? data.map(event => ({
@@ -108,6 +131,7 @@ export class EventComponent implements OnInit {
       }
     });
   }
+
 
 
   fetchPets() {

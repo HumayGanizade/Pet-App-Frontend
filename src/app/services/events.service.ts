@@ -61,8 +61,6 @@ export class EventsService {
     return this.http.post<any>(`${this.eventUrl}/${userId}`, body, { headers });
   }
 
-
-
   getFilteredEvents(filters: any): Observable<any> {
     let params = new HttpParams();
 
@@ -111,8 +109,6 @@ export class EventsService {
     return this.http.get<any>(`${this.justApi}/lost-animal-event`, { params });
   }
 
-
-
   getEventsByUserId(): Observable<any> {
     const token = localStorage.getItem('authToken');
     const userId = this.getUserIdFromToken();
@@ -129,6 +125,42 @@ export class EventsService {
       'Content-Type': 'application/json',
     });
     return this.http.get(`${this.eventUrl}/getAllEventsByUserId/${userId}`, { headers })
+  }
+
+  getRescueEventsByUserId(): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    const userId = this.getUserIdFromToken();
+
+    if (!userId) {
+      throw new Error('User ID not found in token');
+    }
+
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.justApi}/rescue-event/getAllByUserId/${userId}`, { headers })
+  }
+
+  getLostAnimalEventsByUserId(): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    const userId = this.getUserIdFromToken();
+
+    if (!userId) {
+      throw new Error('User ID not found in token');
+    }
+
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.justApi}/lost-animal-event/getAllByUserId/${userId}`, { headers })
   }
 
   getEventTypes() {
@@ -190,6 +222,44 @@ export class EventsService {
     return this.http.delete(`${this.eventUrl}/${id}`, { headers })
   }
 
+  deleteRescueEventById(id: string) {
+    const token = localStorage.getItem('authToken');
+    const userId = this.getUserIdFromToken();
+
+    if (!userId) {
+      throw new Error('User ID not found in token');
+    }
+
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.delete(`${this.justApi}/rescue-event/${id}`, { headers })
+  }
+
+  deleteLostAnimalEventById(id: string) {
+    const token = localStorage.getItem('authToken');
+    const userId = this.getUserIdFromToken();
+
+    if (!userId) {
+      throw new Error('User ID not found in token');
+    }
+
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.delete(`${this.justApi}/lost-animal-event/${id}`, { headers })
+  }
+
   createRescueEvent(data: any): Observable<any> {
     const token = localStorage.getItem('authToken');
     if (!token) {
@@ -227,5 +297,100 @@ export class EventsService {
     });
 
     return this.http.put(`${this.justApi}/events/${id}`, data, { headers });
+  }
+
+  editRescueEventById(id: string | null | undefined, data: any): Observable<any>  {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put(`${this.justApi}/rescue-event/${id}`, data, { headers });
+  }
+
+  editLostAnimalEventById(id: string | null | undefined, data: any): Observable<any>  {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put(`${this.justApi}/lost-animal-event/${id}`, data, { headers });
+  }
+
+  //comment
+  createComment(eventId: string, body: any, eventTypeId: number ) {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post<any>(`${this.justApi}/comment/${eventId}/${eventTypeId}`, body, { headers });
+  }
+
+  createReplyToComment(commentId: string, body: any) {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post<any>(`${this.justApi}/comment/${commentId}`, body, { headers });
+  }
+
+  getCommentsByEventType(eventId: string, eventTypeId: number) {
+    return this.http.get<any>(`${this.justApi}/comment/getCommentsByEventType/${eventId}/${eventTypeId}`);
+  }
+
+  getRepliesOfComment(commentId: string) {
+    return this.http.get<any>(`${this.justApi}/comment/getRepliesOfComment/${commentId}`);
+  }
+
+  editCommentById(commentId: string, body: any) {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put<any>(`${this.justApi}/comment/${commentId}`, body, { headers });
+  }
+
+  deleteCommentById(commentId: string) {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.delete<any>(`${this.justApi}/comment/${commentId}`, { headers });
   }
 }
