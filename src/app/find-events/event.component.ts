@@ -13,6 +13,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {Router} from "@angular/router";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-find-events',
@@ -31,7 +32,8 @@ import {Router} from "@angular/router";
     MatNativeDateModule,
     MatIconModule,
     MatButtonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatTooltip
   ],
   styleUrls: ['./event.component.scss']
 })
@@ -45,6 +47,8 @@ export class EventComponent implements OnInit {
   countries$!: Observable<{ id: string, name: string }[]>;
   cities$!: Observable<{ id: string, name: string }[]>;
   types$!: Observable<{ name: string }[]>;
+  savedEventIds: string[] = [];
+
 
   constructor(private eventsService: EventsService, private fb: FormBuilder, private router: Router) {
     this.filterForm = this.fb.group({
@@ -101,8 +105,6 @@ export class EventComponent implements OnInit {
         );
       })
     );
-
-
   }
 
   fetchEvents() {
@@ -115,14 +117,19 @@ export class EventComponent implements OnInit {
       breedIds: Array.isArray(formValue.breedIds) ? formValue.breedIds.join(',') : '',
     };
 
-    this.eventsService.getFilteredEvents(params).subscribe({
-      next: (data) => {
-        this.events = Array.isArray(data)
-          ? data.map(event => ({
+    forkJoin({
+      events: this.eventsService.getFilteredEvents(params),
+      saved: this.eventsService.getSavedEventsByEventTypeId(1)
+    }).subscribe({
+      next: ({ events, saved }) => {
+        this.events = Array.isArray(events)
+          ? events.map(event => ({
             ...event,
             photo: event.photo ? `data:image/jpeg;base64,${event.photo}` : null,
           }))
           : [];
+
+        this.savedEventIds = Array.isArray(saved) ? saved.map(e => e.id) : [];
         this.isLoading = false;
       },
       error: (error) => {
@@ -176,5 +183,33 @@ export class EventComponent implements OnInit {
 
   goToEvent(eventId: string) {
     this.router.navigate(['/app-find-events', eventId]);
+  }
+
+  isEventSaved(eventId: string): boolean {
+    return this.savedEventIds.includes(eventId);
+  }
+
+  toggleSave(event: any, clickEvent: MouseEvent) {
+    clickEvent.stopPropagation(); // prevent navigation
+
+    const isSaved = this.isEventSaved(event.id);
+    const eventId = event.id;
+
+    const action$ = isSaved
+      ? this.eventsService.unsaveEvent(eventId, 1)
+      : this.eventsService.saveEvent(eventId, 1);
+
+    action$.subscribe({
+      next: () => {
+        if (isSaved) {
+          this.savedEventIds = this.savedEventIds.filter(id => id !== eventId);
+        } else {
+          this.savedEventIds.push(eventId);
+        }
+      },
+      error: (err) => {
+        console.error('Failed to toggle save:', err);
+      }
+    });
   }
 }

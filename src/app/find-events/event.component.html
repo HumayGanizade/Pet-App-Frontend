@@ -100,7 +100,7 @@
     No events found.
   </div>
 
-  <div *ngIf="!isLoading" class="events-grid">
+  <div *ngIf="!isLoading && savedEventIds !== undefined" class="events-grid">
     <div *ngFor="let event of events" class="event-card" (click)="goToEvent(event.id)">
       <div class="image-placeholder">
         <img *ngIf="event.photo; else placeholder" [src]="event.photo" class="event-image" alt="Event Image"/>
@@ -113,6 +113,17 @@
         <p>{{ event.date | date }}</p>
         <p>{{ event.price}} $</p>
       </div>
+
+      <button
+        mat-icon-button
+        class="bookmark-button"
+        (click)="toggleSave(event, $event)"
+        [matTooltip]="isEventSaved(event.id) ? 'Unsave' : 'Save'"
+      >
+        <mat-icon color="primary">
+          {{ isEventSaved(event.id) ? 'bookmark' : 'bookmark_border' }}
+        </mat-icon>
+      </button>
     </div>
   </div>
 </div>

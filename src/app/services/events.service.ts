@@ -393,4 +393,49 @@ export class EventsService {
 
     return this.http.delete<any>(`${this.justApi}/comment/${commentId}`, { headers });
   }
+
+  saveEvent(eventId: number, eventTypeId: number) {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post<any>(`${this.justApi}/saved-event/addEventToUser/${eventId}/${eventTypeId}`,{}, { headers });
+  }
+
+  unsaveEvent(eventId: number, eventTypeId: number) {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.delete<any>(`${this.justApi}/saved-event/remove/${eventId}/${eventTypeId}`, { headers });
+  }
+
+  getSavedEventsByEventTypeId(eventTypeId: number) {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      throw new Error('Auth token is missing');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get<any>(`${this.justApi}/saved-event/getAllSavedEventsOfUserByEventTypeId/${eventTypeId}`, { headers });
+  }
 }
