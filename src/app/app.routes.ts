@@ -70,4 +70,20 @@ export const routes: Routes = [
     path: 'app-edit-lost-animal-event-page/:id',
     loadComponent: () => import('./edit-lost-animal-event-page/edit-lost-animal-event-page.component').then(m => m.EditLostAnimalEventPageComponent)
   },
+  {
+    path: 'app-saved-event-top',
+    loadComponent: () => import('./saved-event-top/saved-event-top.component').then(m => m.SavedEventTopComponent)
+  },
+  {
+    path: 'app-saved-general-event',
+    loadComponent: () => import('./saved-general-event/saved-general-event.component').then(m => m.SavedGeneralEventComponent)
+  },
+  {
+    path: 'app-saved-rescue-event',
+    loadComponent: () => import('./saved-rescue-event/saved-rescue-event.component').then(m => m.SavedRescueEventComponent)
+  },
+  {
+    path: 'app-saved-lost-animal-event',
+    loadComponent: () => import('./saved-lost-animal-event/saved-lost-animal-event.component').then(m => m.SavedLostAnimalEventComponent)
+  },
 ];

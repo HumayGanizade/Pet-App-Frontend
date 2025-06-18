@@ -5,11 +5,13 @@ import {distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
 import {EventsService} from "../services/events.service";
 import {Router} from "@angular/router";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatOption} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
+import {MatIcon} from "@angular/material/icon";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-find-lost-animal-events',
@@ -24,7 +26,10 @@ import {MatSelect} from "@angular/material/select";
     MatSelect,
     NgForOf,
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    MatIcon,
+    MatIconButton,
+    MatTooltip
   ],
   templateUrl: './find-lost-animal-events.component.html',
   styleUrl: './find-lost-animal-events.component.scss'
@@ -39,6 +44,7 @@ export class FindLostAnimalEventsComponent implements OnInit{
   countries$!: Observable<any>;
   cities$!: Observable<any>;
   colors$!: Observable<any>;
+  savedEventIds: string[] = [];
 
   constructor(private fb: FormBuilder, private eventsService: EventsService, private router: Router) {
     this.filterForm = this.fb.group({
@@ -89,14 +95,19 @@ export class FindLostAnimalEventsComponent implements OnInit{
       ...formValue,
       breedIds: Array.isArray(formValue.breedIds) ? formValue.breedIds.join(',') : '',
     };
-    this.eventsService.getFilteredLostAnimalsEvents(params).subscribe({
-      next: (data) => {
-        this.lostAnimalEvents = Array.isArray(data)
-          ? data.map(event => ({
+
+    forkJoin({
+      events: this.eventsService.getFilteredLostAnimalsEvents(params),
+      saved: this.eventsService.getSavedEventsByEventTypeId(3)
+    }).subscribe({
+      next: ({ events, saved }) => {
+        this.lostAnimalEvents = Array.isArray(events)
+          ? events.map(event => ({
             ...event,
             photo: event.photo ? `data:image/jpeg;base64,${event.photo}` : null,
           }))
           : [];
+        this.savedEventIds = Array.isArray(saved) ? saved.map(e => e.id) : [];
         this.isLoading = false;
       },
       error: (error) => {
@@ -105,6 +116,7 @@ export class FindLostAnimalEventsComponent implements OnInit{
       }
     });
   }
+
 
   loadFilters() {
     this.pets$ = this.eventsService.getPets();
@@ -153,5 +165,33 @@ export class FindLostAnimalEventsComponent implements OnInit{
 
   goToEvent(eventId: string) {
     this.router.navigate(['/app-find-lost-animal-events', eventId]);
+  }
+
+  isEventSaved(eventId: string): boolean {
+    return this.savedEventIds.includes(eventId);
+  }
+
+  toggleSave(event: any, clickEvent: MouseEvent) {
+    clickEvent.stopPropagation(); // prevent navigation
+
+    const isSaved = this.isEventSaved(event.id);
+    const eventId = event.id;
+
+    const action$ = isSaved
+      ? this.eventsService.unsaveEvent(eventId, 3)
+      : this.eventsService.saveEvent(eventId, 3);
+
+    action$.subscribe({
+      next: () => {
+        if (isSaved) {
+          this.savedEventIds = this.savedEventIds.filter(id => id !== eventId);
+        } else {
+          this.savedEventIds.push(eventId);
+        }
+      },
+      error: (err) => {
+        console.error('Failed to toggle save:', err);
+      }
+    });
   }
 }

@@ -2,56 +2,56 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {forkJoin, Observable, of} from "rxjs";
 import {EventsService} from "../services/events.service";
+import {Router} from "@angular/router";
 import {distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
-import {MatButtonModule} from "@angular/material/button";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
-import {MatNativeDateModule} from "@angular/material/core";
-import {MatSelectModule} from "@angular/material/select";
-import {Router} from "@angular/router";
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatIconModule} from "@angular/material/icon";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatButton, MatIconButton} from "@angular/material/button";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {MatOption} from "@angular/material/core";
+import {MatSelect} from "@angular/material/select";
+import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
-  selector: 'app-find-rescue-events',
+  selector: 'app-saved-lost-animal-event',
   standalone: true,
   imports: [
-    ReactiveFormsModule,
-    NgForOf,
-    NgIf,
     AsyncPipe,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatIconModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
+    MatButton,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    MatOption,
+    MatSelect,
+    NgForOf,
+    ReactiveFormsModule,
+    NgIf,
+    MatIcon,
+    MatIconButton,
     MatTooltip
   ],
-  templateUrl: './find-rescue-events.component.html',
-  styleUrl: './find-rescue-events.component.scss'
+  templateUrl: './saved-lost-animal-event.component.html',
+  styleUrl: './saved-lost-animal-event.component.scss'
 })
-export class FindRescueEventsComponent implements OnInit {
+export class SavedLostAnimalEventComponent implements OnInit {
   filterForm!: FormGroup;
-  rescueEvents: any[] = [];
+  lostAnimalEvents: any[] = [];
   isFiltersLoaded = false;
   isLoading = false;
   pets$!: Observable<any>;
   breeds$!: Observable<any>;
   countries$!: Observable<any>;
   cities$!: Observable<any>;
-  savedEventIds: string[] = [];
+  colors$!: Observable<any>;
 
   constructor(private fb: FormBuilder, private eventsService: EventsService, private router: Router) {
     this.filterForm = this.fb.group({
+      name: [''],
       gender: [''],
       minAge: [''],
       maxAge: [''],
+      colorId: [''],
       petId: [''],
       breedIds: [[]],
       countryId: [''],
@@ -60,17 +60,17 @@ export class FindRescueEventsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchEvents();
+    this.fetchSavedEvents();
     forkJoin({
       pets: this.fetchPets(),
       countries: this.fetchCountries(),
-    }).subscribe(({pets, countries}) => {
+      colors: this.fetchColors(),
+    }).subscribe(({pets, countries, colors}) => {
       this.pets$ = of(pets);
       this.countries$ = of(countries);
+      this.colors$ = of(colors);
       this.isFiltersLoaded = true;
     })
-
-    this.loadFilters();
 
     this.cities$ = this.filterForm.get('countryId')!.valueChanges.pipe(
       startWith(''),
@@ -85,42 +85,39 @@ export class FindRescueEventsComponent implements OnInit {
     );
   }
 
-  loadFilters() {
-    this.pets$ = this.eventsService.getPets();
-    this.countries$ = this.eventsService.getCountries();
-  }
-
-  fetchEvents() {
+  fetchSavedEvents() {
     this.isLoading = true;
-
     const filters = this.filterForm.value;
+
     const params = {
       ...filters,
       breedIds: Array.isArray(filters.breedIds) ? filters.breedIds.join(',') : '',
     };
 
     forkJoin({
-      events: this.eventsService.getFilteredRescueEvents(params),
-      saved: this.eventsService.getSavedEventsByEventTypeId(2)
+      allSaved: this.eventsService.getSavedEventsByEventTypeId(3),
+      filtered: this.eventsService.getFilteredLostAnimalsEvents(params)
     }).subscribe({
-      next: ({ events, saved }) => {
-        this.rescueEvents = Array.isArray(events)
-          ? events.map(event => ({
-            ...event,
-            photo: event.photo ? `data:image/jpeg;base64,${event.photo}` : null,
-          }))
+      next: ({ allSaved, filtered }) => {
+        const savedIds = new Set(allSaved.map((e: any) => e.id));
+
+        this.lostAnimalEvents = Array.isArray(filtered)
+          ? filtered
+            .filter((event: any) => savedIds.has(event.id))
+            .map(event => ({
+              ...event,
+              photo: event.photo ? `data:image/jpeg;base64,${event.photo}` : null,
+            }))
           : [];
 
-        this.savedEventIds = Array.isArray(saved) ? saved.map(e => e.id) : [];
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error fetching events', error);
+        console.error('Error fetching filtered saved events', error);
         this.isLoading = false;
       }
     });
   }
-
 
   fetchPets() {
     return this.eventsService.getPets().pipe(
@@ -154,35 +151,29 @@ export class FindRescueEventsComponent implements OnInit {
     );
   }
 
-  goToEvent(eventId: string) {
-    this.router.navigate(['/app-find-rescue-events', eventId]);
+  fetchColors() {
+    return this.eventsService.getColors().pipe(
+      map((colors: any) =>
+        Array.isArray(colors) ? colors.map(colors => ({ id: colors.id, name: colors.name })).sort((a, b) => a.name.localeCompare(b.name)) : []
+      )
+    );
   }
 
-  isEventSaved(eventId: string): boolean {
-    return this.savedEventIds.includes(eventId);
+  async goToEvent(eventId: string) {
+    try {
+      await this.router.navigate(['/app-find-lost-animal-events', eventId]);
+    } catch (error) {
+      console.error('Navigation failed:', error);
+    }
   }
 
-  toggleSave(event: any, clickEvent: MouseEvent) {
-    clickEvent.stopPropagation(); // prevent navigation
-
-    const isSaved = this.isEventSaved(event.id);
-    const eventId = event.id;
-
-    const action$ = isSaved
-      ? this.eventsService.unsaveEvent(eventId, 2)
-      : this.eventsService.saveEvent(eventId, 2);
-
-    action$.subscribe({
-      next: () => {
-        if (isSaved) {
-          this.savedEventIds = this.savedEventIds.filter(id => id !== eventId);
-        } else {
-          this.savedEventIds.push(eventId);
-        }
-      },
-      error: (err) => {
-        console.error('Failed to toggle save:', err);
-      }
-    });
+  async unsaveEvent(eventId: string, clickEvent: MouseEvent) {
+    clickEvent.stopPropagation();
+    try {
+      await this.eventsService.unsaveEvent(eventId, 3).toPromise();
+      this.lostAnimalEvents = this.lostAnimalEvents.filter(event => event.id !== eventId);
+    } catch (err) {
+      console.error('Failed to unsave event:', err);
+    }
   }
 }

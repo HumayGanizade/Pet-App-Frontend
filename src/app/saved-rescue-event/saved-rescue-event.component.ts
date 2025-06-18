@@ -1,22 +1,22 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
-import {forkJoin, Observable, of} from "rxjs";
-import {EventsService} from "../services/events.service";
-import {distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
-import {MatButtonModule} from "@angular/material/button";
 import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
-import {MatNativeDateModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
-import {Router} from "@angular/router";
+import {MatInputModule} from "@angular/material/input";
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
 import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatTooltip} from "@angular/material/tooltip";
+import {forkJoin, Observable, of} from "rxjs";
+import {distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
+import {EventsService} from "../services/events.service";
+import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-find-rescue-events',
+  selector: 'app-saved-rescue-event',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -33,10 +33,10 @@ import {MatTooltip} from "@angular/material/tooltip";
     MatProgressSpinnerModule,
     MatTooltip
   ],
-  templateUrl: './find-rescue-events.component.html',
-  styleUrl: './find-rescue-events.component.scss'
+  templateUrl: './saved-rescue-event.component.html',
+  styleUrl: './saved-rescue-event.component.scss'
 })
-export class FindRescueEventsComponent implements OnInit {
+export class SavedRescueEventComponent implements OnInit {
   filterForm!: FormGroup;
   rescueEvents: any[] = [];
   isFiltersLoaded = false;
@@ -85,42 +85,46 @@ export class FindRescueEventsComponent implements OnInit {
     );
   }
 
-  loadFilters() {
-    this.pets$ = this.eventsService.getPets();
-    this.countries$ = this.eventsService.getCountries();
-  }
-
   fetchEvents() {
     this.isLoading = true;
 
-    const filters = this.filterForm.value;
+    const f = this.filterForm.value;
     const params = {
-      ...filters,
-      breedIds: Array.isArray(filters.breedIds) ? filters.breedIds.join(',') : '',
+      ...f,
+      breedIds: Array.isArray(f.breedIds) ? f.breedIds.join(',') : '',
     };
 
     forkJoin({
-      events: this.eventsService.getFilteredRescueEvents(params),
-      saved: this.eventsService.getSavedEventsByEventTypeId(2)
+      filtered: this.eventsService.getFilteredRescueEvents(params),
+      saved:    this.eventsService.getSavedEventsByEventTypeId(2)
     }).subscribe({
-      next: ({ events, saved }) => {
-        this.rescueEvents = Array.isArray(events)
-          ? events.map(event => ({
-            ...event,
-            photo: event.photo ? `data:image/jpeg;base64,${event.photo}` : null,
-          }))
+      next: ({ filtered, saved }) => {
+        const savedIds = new Set(saved.map((e: any) => e.id));
+
+        this.rescueEvents = Array.isArray(filtered)
+          ? filtered
+            .filter((ev: any) => savedIds.has(ev.id))
+            .map(ev => ({
+              ...ev,
+              photo: ev.photo ? `data:image/jpeg;base64,${ev.photo}` : null,
+            }))
           : [];
 
-        this.savedEventIds = Array.isArray(saved) ? saved.map(e => e.id) : [];
+        this.savedEventIds = [...savedIds] as string[];
         this.isLoading = false;
       },
-      error: (error) => {
-        console.error('Error fetching events', error);
+      error: err => {
+        console.error('Error fetching filtered-saved events', err);
         this.isLoading = false;
       }
     });
   }
 
+
+  loadFilters() {
+    this.pets$ = this.eventsService.getPets();
+    this.countries$ = this.eventsService.getCountries();
+  }
 
   fetchPets() {
     return this.eventsService.getPets().pipe(
@@ -162,27 +166,14 @@ export class FindRescueEventsComponent implements OnInit {
     return this.savedEventIds.includes(eventId);
   }
 
-  toggleSave(event: any, clickEvent: MouseEvent) {
-    clickEvent.stopPropagation(); // prevent navigation
-
-    const isSaved = this.isEventSaved(event.id);
-    const eventId = event.id;
-
-    const action$ = isSaved
-      ? this.eventsService.unsaveEvent(eventId, 2)
-      : this.eventsService.saveEvent(eventId, 2);
-
-    action$.subscribe({
+  unsaveEvent(eventId: string, e: MouseEvent) {
+    e.stopPropagation();
+    this.eventsService.unsaveEvent(eventId, 2).subscribe({
       next: () => {
-        if (isSaved) {
-          this.savedEventIds = this.savedEventIds.filter(id => id !== eventId);
-        } else {
-          this.savedEventIds.push(eventId);
-        }
+        this.rescueEvents = this.rescueEvents.filter(ev => ev.id !== eventId);
+        this.savedEventIds = this.savedEventIds.filter(id => id !== eventId);
       },
-      error: (err) => {
-        console.error('Failed to toggle save:', err);
-      }
+      error: err => console.error('Failed to unsave:', err)
     });
   }
 }

@@ -1,6 +1,7 @@
-<div class="container">
-  <h4>Lost Animals Events</h4>
-  <form [formGroup]="filterForm" (ngSubmit)="fetchEvents()" class="filter-form">
+<div class="container" >
+
+  <h4>General Events</h4>
+  <form [formGroup]="filterForm" (ngSubmit)="fetchSavedEvents()" class="filter-form">
     <div class="filter-group">
       <mat-form-field class="example-full-width">
         <mat-label>Event name</mat-label>
@@ -8,24 +9,33 @@
       </mat-form-field>
 
       <mat-form-field floatLabel="always">
-        <mat-label>min age</mat-label>
-        <input formControlName="minAge" matInput type="number" class="example-right-align" placeholder="0" />
+        <mat-label>min price</mat-label>
+        <input formControlName="minPrice" matInput type="number" class="example-right-align" placeholder="0" />
+        <span matTextPrefix>$&nbsp;</span>
       </mat-form-field>
 
       <mat-form-field floatLabel="always">
-        <mat-label>max age</mat-label>
-        <input formControlName="maxAge" matInput type="number" class="example-right-align" placeholder="0" />
+        <mat-label>max price</mat-label>
+        <input formControlName="maxPrice" matInput type="number" class="example-right-align" placeholder="0" />
+        <span matTextPrefix>$&nbsp;</span>
       </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Select Country</mat-label>
-        <mat-select formControlName="colorId">
-          <mat-option value="">Select Color</mat-option>
-          <mat-option *ngFor="let color of colors$ | async" [value]="color.id">
-            {{ color.name }}
-          </mat-option>
-        </mat-select>
+      <mat-form-field>
+        <mat-label>Choose a start date</mat-label>
+        <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
       </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Choose an end date</mat-label>
+        <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+
 
       <mat-form-field appearance="fill">
         <mat-label>Select Country</mat-label>
@@ -48,8 +58,18 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill">
+        <mat-label>Select Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option value="">Select Type</mat-option>
+          <mat-option *ngFor="let type of types$ | async" [value]="type.name">
+            {{ type.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
         <mat-label>Select Animal</mat-label>
-        <mat-select formControlName="petId">
+        <mat-select formControlName="petsIds" multiple>
           <mat-option *ngFor="let pet of pets$ | async" [value]="pet.id">
             {{ pet.name }}
           </mat-option>
@@ -76,12 +96,12 @@
 
 <div class="events-list">
   <div *ngIf="isLoading">Loading...</div>
-  <div *ngIf="!isLoading && lostAnimalEvents.length === 0">
+  <div *ngIf="!isLoading && events.length === 0">
     No events found.
   </div>
 
-  <div *ngIf="!isLoading" class="events-grid">
-    <div *ngFor="let event of lostAnimalEvents" class="event-card" (click)="goToEvent(event.id)">
+  <div *ngIf="!isLoading && savedEventIds !== undefined" class="events-grid">
+    <div *ngFor="let event of events" class="event-card" (click)="goToEvent(event.id)">
       <div class="image-placeholder">
         <img *ngIf="event.photo; else placeholder" [src]="event.photo" class="event-image" alt="Event Image"/>
         <ng-template #placeholder>
@@ -90,19 +110,19 @@
       </div>
       <div class="event-details">
         <h3>{{ event.name }}</h3>
-        <p>{{ event.age}} y.o.</p>
+        <p>{{ event.date | date }}</p>
+        <p>{{ event.price}} $</p>
       </div>
 
       <button
         mat-icon-button
-        class="bookmark-button"
-        (click)="toggleSave(event, $event)"
-        [matTooltip]="isEventSaved(event.id) ? 'Unsave' : 'Save'"
+        matTooltip="Unsave"
+        (click)="unsaveEvent(event.id, $event)"
       >
-        <mat-icon color="primary">
-          {{ isEventSaved(event.id) ? 'bookmark' : 'bookmark_border' }}
-        </mat-icon>
+        <mat-icon color="warn">bookmark_remove</mat-icon>
       </button>
+
     </div>
   </div>
 </div>
+

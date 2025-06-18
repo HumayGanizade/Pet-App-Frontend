@@ -1,6 +1,6 @@
 <div class="container">
   <h4>Lost Animals Events</h4>
-  <form [formGroup]="filterForm" (ngSubmit)="fetchEvents()" class="filter-form">
+  <form [formGroup]="filterForm" (ngSubmit)="fetchSavedEvents()" class="filter-form">
     <div class="filter-group">
       <mat-form-field class="example-full-width">
         <mat-label>Event name</mat-label>
@@ -96,13 +96,12 @@
       <button
         mat-icon-button
         class="bookmark-button"
-        (click)="toggleSave(event, $event)"
-        [matTooltip]="isEventSaved(event.id) ? 'Unsave' : 'Save'"
+        (click)="unsaveEvent(event.id, $event)"
+        matTooltip="Unsave"
       >
-        <mat-icon color="primary">
-          {{ isEventSaved(event.id) ? 'bookmark' : 'bookmark_border' }}
-        </mat-icon>
+        <mat-icon color="warn">bookmark</mat-icon>
       </button>
+
     </div>
   </div>
 </div>

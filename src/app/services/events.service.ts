@@ -409,7 +409,7 @@ export class EventsService {
     return this.http.post<any>(`${this.justApi}/saved-event/addEventToUser/${eventId}/${eventTypeId}`,{}, { headers });
   }
 
-  unsaveEvent(eventId: number, eventTypeId: number) {
+  unsaveEvent(eventId: string, eventTypeId: number) {
     const token = localStorage.getItem('authToken');
 
     if (!token) {

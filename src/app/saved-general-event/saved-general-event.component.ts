@@ -1,8 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
-import {EventsService} from "../services/events.service";
-import {forkJoin, Observable, of} from "rxjs";
-import {distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
 import {AsyncPipe, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatSelectModule} from "@angular/material/select";
@@ -12,13 +9,15 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {Router} from "@angular/router";
 import {MatTooltip} from "@angular/material/tooltip";
+import {forkJoin, Observable, of} from "rxjs";
+import {EventsService} from "../services/events.service";
+import {Router} from "@angular/router";
+import {distinctUntilChanged, map, startWith, switchMap} from "rxjs/operators";
 
 @Component({
-  selector: 'app-find-events',
+  selector: 'app-saved-general-event',
   standalone: true,
-  templateUrl: './event.component.html',
   imports: [
     ReactiveFormsModule,
     NgForOf,
@@ -35,9 +34,10 @@ import {MatTooltip} from "@angular/material/tooltip";
     MatProgressSpinnerModule,
     MatTooltip
   ],
-  styleUrls: ['./event.component.scss']
+  templateUrl: './saved-general-event.component.html',
+  styleUrl: './saved-general-event.component.scss'
 })
-export class EventComponent implements OnInit {
+export class SavedGeneralEventComponent implements OnInit{
   filterForm: FormGroup;
   events: any[] = [];
   isLoading = false;
@@ -48,7 +48,6 @@ export class EventComponent implements OnInit {
   cities$!: Observable<{ id: string, name: string }[]>;
   types$!: Observable<{ name: string }[]>;
   savedEventIds: string[] = [];
-
 
   constructor(private eventsService: EventsService, private fb: FormBuilder, private router: Router) {
     this.filterForm = this.fb.group({
@@ -67,10 +66,10 @@ export class EventComponent implements OnInit {
 
   ngOnInit() {
     this.isFiltersLoaded = false;
-    this.fetchEvents();
+    this.fetchSavedEvents();
     forkJoin({
-      pets: this.fetchPets(),
       countries: this.fetchCountries(),
+      pets: this.fetchPets(),
       types: this.fetchTypes()
     }).subscribe(({ pets, countries, types }) => {
       this.pets$ = of(pets);
@@ -107,10 +106,11 @@ export class EventComponent implements OnInit {
     );
   }
 
-  fetchEvents() {
+  fetchSavedEvents() {
     this.isLoading = true;
 
     const formValue = this.filterForm.value;
+
     const params = {
       ...formValue,
       petsIds: Array.isArray(formValue.petsIds) ? formValue.petsIds.join(',') : '',
@@ -118,26 +118,29 @@ export class EventComponent implements OnInit {
     };
 
     forkJoin({
-      events: this.eventsService.getFilteredEvents(params),
+      allFiltered: this.eventsService.getFilteredEvents(params),
       saved: this.eventsService.getSavedEventsByEventTypeId(1)
     }).subscribe({
-      next: ({ events, saved }) => {
-        this.events = Array.isArray(events)
-          ? events.map(event => ({
+      next: ({ allFiltered, saved }) => {
+        const savedIds = saved.map((e: any) => e.id);
+
+        this.events = allFiltered
+          .filter((event: any) => savedIds.includes(event.id))
+          .map((event: any) => ({
             ...event,
             photo: event.photo ? `data:image/jpeg;base64,${event.photo}` : null,
-          }))
-          : [];
+          }));
 
-        this.savedEventIds = Array.isArray(saved) ? saved.map(e => e.id) : [];
+        this.savedEventIds = savedIds;
         this.isLoading = false;
       },
-      error: (error) => {
-        console.error('Error fetching events', error);
+      error: (err) => {
+        console.error('Failed to load filtered saved events:', err);
         this.isLoading = false;
       }
     });
   }
+
 
   fetchPets() {
     return this.eventsService.getPets().pipe(
@@ -179,34 +182,23 @@ export class EventComponent implements OnInit {
     );
   }
 
-  goToEvent(eventId: string) {
-    this.router.navigate(['/app-find-events', eventId]);
+  async goToEvent(eventId: string) {
+    try {
+      await this.router.navigate(['/app-find-events', eventId]);
+    } catch (error) {
+      console.error('Navigation failed:', error);
+    }
   }
 
-  isEventSaved(eventId: string): boolean {
-    return this.savedEventIds.includes(eventId);
-  }
 
-  toggleSave(event: any, clickEvent: MouseEvent) {
-    clickEvent.stopPropagation(); // prevent navigation
-
-    const isSaved = this.isEventSaved(event.id);
-    const eventId = event.id;
-
-    const action$ = isSaved
-      ? this.eventsService.unsaveEvent(eventId, 1)
-      : this.eventsService.saveEvent(eventId, 1);
-
-    action$.subscribe({
+  unsaveEvent(eventId: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.eventsService.unsaveEvent(eventId, 1).subscribe({
       next: () => {
-        if (isSaved) {
-          this.savedEventIds = this.savedEventIds.filter(id => id !== eventId);
-        } else {
-          this.savedEventIds.push(eventId);
-        }
+        this.events = this.events.filter(e => e.id !== eventId);
       },
       error: (err) => {
-        console.error('Failed to toggle save:', err);
+        console.error('Failed to unsave event:', err);
       }
     });
   }
